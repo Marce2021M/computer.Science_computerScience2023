@@ -1,0 +1,59 @@
+portion_down_payment = 0.25
+
+r_rate = 0.04
+
+
+annual_salary= float(input("Enter your annual salary: "))
+total_cost = 1000000 #float(input("Enter the cost of your dream home: "))
+semi_annual_raise = .07 #float(input("Enter the semiannual raise, as a decimal: "))
+
+monthly_salary = annual_salary / 12
+
+total_dreamed_savings = total_cost * portion_down_payment
+
+months = 36 #months to save for a down payment
+#float(input("Enter the number of months: "))
+
+
+
+def get_current_savings(portion_saved, monthly_salary = monthly_salary):
+    current_savings = 0
+    for i in range(1,months+1):
+        if i % 6 == 1 and i != 1:
+            monthly_salary += monthly_salary * semi_annual_raise
+        current_savings += monthly_salary * portion_saved + current_savings*r_rate / 12
+    return current_savings
+
+def get_salary_acum(monthly_salary):
+    salary_acum = 0 #variable auxiliar para acumular el salario
+    for i in range(1,37):
+        if i % 6 == 1 and i != 1:
+            monthly_salary += monthly_salary * semi_annual_raise
+        salary_acum += monthly_salary 
+    return salary_acum
+
+    
+if get_salary_acum(monthly_salary) < total_dreamed_savings:
+    print("It is not possible to pay the down payment in three years.")
+else:
+    portion_saved_int = 5000
+    portion_saved_int_top = 10000
+    portion_saved_int_bottom = 0
+    portion_saved = portion_saved_int / 10000
+    contador = 0
+    
+    current_savings = get_current_savings(portion_saved )
+    while abs(current_savings - total_dreamed_savings) >100 or current_savings < total_dreamed_savings:
+        contador += 1
+        if current_savings > total_dreamed_savings:
+            portion_saved_int_top = portion_saved_int
+            portion_saved_int = (portion_saved_int+portion_saved_int_bottom )// 2
+            
+        else:
+            portion_saved_int_bottom = portion_saved_int
+            portion_saved_int = (portion_saved_int+portion_saved_int_top) // 2
+            
+        portion_saved = portion_saved_int / 10000
+        current_savings = get_current_savings(portion_saved )
+         
+    print("Proportion saved: ", portion_saved, "\ncontador: ", contador, "\nsavings: ", current_savings, "\ndown payment: ", total_dreamed_savings)
